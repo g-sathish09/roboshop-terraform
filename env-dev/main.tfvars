@@ -1,6 +1,6 @@
 env         = "dev"
-domain_name = "rdevopsb81.online"
-zone_id     = "Z02249652EM5BAO495DZ1"
+domain_name = "harsharoboticshop.online"
+zone_id     = "Z05536047CUMASJ01KSK"
 
 db_instances = {
   mongodb = {
