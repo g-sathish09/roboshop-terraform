@@ -104,4 +104,3 @@ web_instances = {
 #       instance_types = ["t3.large"]
 #     }
 #   }
-}
