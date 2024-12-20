@@ -26,9 +26,9 @@ db_instances = {
 #     instance_type = "t3.small"
 #     volume_size   = 20
 #   }
-# }
+ }
 
-# app_instances = {
+ app_instances = {
 
 #   catalogue = {
 #     app_port      = 8080
@@ -60,15 +60,15 @@ db_instances = {
 #     volume_size   = 30
 #   }
 
-# }
+}
 
-# web_instances = {
-#   frontend = {
-#     app_port      = 80
-#     instance_type = "t3.small"
-#     volume_size   = 20
-#   }
-# }
+web_instances = {
+  frontend = {
+    app_port      = 80
+    instance_type = "t3.small"
+    volume_size   = 20
+  }
+}
 
 # eks = {
 #   subnet_ids = ["subnet-0792461b5224de598", "subnet-033b518ba99521b88"]
