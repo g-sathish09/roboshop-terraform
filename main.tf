@@ -40,12 +40,12 @@ module "web_instances" {
   volume_size    = each.value["volume_size"]
 }
 
-module "eks" {
-  source = "./modules/eks"
-
-  env = var.env
-  subnet_ids = var.eks["subnet_ids"]
-  addons     = var.eks["addons"]
-  node_groups = var.eks["node_groups"]
-  access_entries = var.eks["access_entries"]
-}
+# module "eks" {
+#   source = "./modules/eks"
+#
+#   env = var.env
+#   subnet_ids = var.eks["subnet_ids"]
+#   addons     = var.eks["addons"]
+#   node_groups = var.eks["node_groups"]
+#   access_entries = var.eks["access_entries"]
+# }
