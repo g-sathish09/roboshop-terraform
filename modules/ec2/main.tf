@@ -58,8 +58,8 @@ resource "null_resource" "ansible-pull" {
       host     = aws_instance.instance.private_ip
     }
     inline = [
-      # "sudo apt-get update -y || sudo yum update -y", # Update package lists (Debian/RedHat)
-      # "sudo apt-get install -y ansible || sudo yum install -y ansible", # Install Ansible
+      "sudo dnf install -y epel-release",
+      "sudo dnf install -y ansible",
       "ansible-pull -i localhost, -U https://github.com/gunasekaransathish/roboshop-ansible roboshop.yml -e env=${var.env} -e component=${var.component_name} -e vault_token=${var.vault_token}"
     ]
 
