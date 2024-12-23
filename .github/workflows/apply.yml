@@ -1,0 +1,8 @@
+name: Terraform Infra Provision
+on: [workflow_dispatch]
+jobs:
+  terraform:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          make dev-apply
