@@ -70,6 +70,9 @@ web_instances = {
   }
 }
 
+eks = {
+  subnet_ids = ["subnet-040f5f6417d5f29f2", "subnet-0eaafb9b4d8da3cdc"]
+}
 # eks = {
 #   subnet_ids = ["subnet-0792461b5224de598", "subnet-033b518ba99521b88"]
 #   addons = {
