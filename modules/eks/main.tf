@@ -9,6 +9,12 @@ resource "aws_eks_cluster" "main" {
 }
 
 
+access_config {
+  authentication_mode                         = "API_AND_CONFIG_MAP"
+  bootstrap_cluster_creator_admin_permissions = true
+}
+
+
 resource "aws_eks_addon" "vpc-cni" {
   for_each = var.addons
   cluster_name = aws_eks_cluster.main.name
