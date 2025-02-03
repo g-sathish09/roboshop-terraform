@@ -11,7 +11,25 @@ resource "aws_eks_cluster" "main" {
   }
 }
 
+resource "aws_eks_access_entry" "main" {
+  for_each          = var.access_entries
+  cluster_name      = aws_eks_cluster.main.name
+  principal_arn     = each.value["principal_arn"]
+  kubernetes_groups = each.value["kubernetes_groups"]
+  type              = "STANDARD"
+}
 
+resource "aws_eks_access_policy_association" "example" {
+  for_each      = var.access_entries
+  cluster_name  = aws_eks_cluster.main.name
+  policy_arn    = each.value["policy_arn"]
+  principal_arn = each.value["principal_arn"]
+
+  access_scope {
+    type       = each.value["access_scope_type"]
+    namespaces = each.value["access_scope_namespaces"]
+  }
+}
 
 
 
