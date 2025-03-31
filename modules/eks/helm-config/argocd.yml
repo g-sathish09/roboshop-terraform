@@ -1,6 +1,6 @@
 configs:
   params:
-    server.insecure: false
+    server.insecure: true
 
 ## For nginx ingress
 server:
