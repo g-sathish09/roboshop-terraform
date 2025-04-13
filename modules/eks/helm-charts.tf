@@ -70,3 +70,48 @@ resource "helm_release" "prom-stack" {
   ]
 
 }
+
+
+## External Secrets
+resource "helm_release" "external-secrets" {
+  depends_on = [null_resource.kube-bootstrap]
+
+  name             = "external-secrets"
+  repository       = "https://charts.external-secrets.io"
+  chart            = "external-secrets"
+  namespace        = "devops"
+  create_namespace = true
+  wait             = false
+}
+
+resource "null_resource" "external-secret" {
+  depends_on = [helm_release.external-secrets]
+
+  provisioner "local-exec" {
+    command = <<EOF
+kubectl apply -f - <<EOK
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-token
+data:
+  token: aHZzLnFjMlY5NElNQ2hPQ2RvSkxvM3FlckRReQ==
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterSecretStore
+metadata:
+  name: vault-backend
+spec:
+  provider:
+    vault:
+      server: "http://vault-internal.harsharoboticshop.online:8200"
+      path: "roboshop-${var.env}"
+      version: "v2"
+      auth:
+        tokenSecretRef:
+          name: "vault-token"
+          key: "token"
+EOK
+EOF
+  }
+}
