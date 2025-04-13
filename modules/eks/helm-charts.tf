@@ -81,11 +81,11 @@ resource "helm_release" "external-secrets" {
   chart            = "external-secrets"
   namespace        = "devops"
   create_namespace = true
-  wait             = false
+  wait             = true
 }
 
 resource "null_resource" "external-secret" {
-  depends_on = [helm_release.external-secrets,null_resource.kube-bootstrap]
+  depends_on = [helm_release.external-secrets]
 
   provisioner "local-exec" {
     command = <<EOF
