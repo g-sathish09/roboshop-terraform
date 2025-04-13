@@ -85,7 +85,7 @@ resource "helm_release" "external-secrets" {
 }
 
 resource "null_resource" "external-secret" {
-  depends_on = [helm_release.external-secrets]
+  depends_on = [helm_release.external-secrets,null_resource.kube-bootstrap]
 
   provisioner "local-exec" {
     command = <<EOF
