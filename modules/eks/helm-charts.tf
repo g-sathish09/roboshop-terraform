@@ -130,3 +130,4 @@ resource "helm_release" "filebeat" {
   values = [
     file("${path.module}/helm-config/filebeat.yaml")
   ]
+}
