@@ -115,3 +115,18 @@ EOK
 EOF
   }
 }
+
+## Filebeat Helm Chart
+resource "helm_release" "filebeat" {
+
+  depends_on = [null_resource.kube-bootstrap]
+
+  name       = "filebeat"
+  repository = "https://helm.elastic.co"
+  chart      = "filebeat"
+  namespace  = "kube-system"
+  wait       = "false"
+
+  values = [
+    file("${path.module}/helm-config/filebeat.yaml")
+  ]
