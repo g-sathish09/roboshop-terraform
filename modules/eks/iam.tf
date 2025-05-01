@@ -118,3 +118,65 @@ resource "aws_eks_pod_identity_association" "external-dns" {
   service_account = "external-dns"
   role_arn        = aws_iam_role.external-dns.arn
 }
+
+resource "aws_iam_role" "cluster-autoscaler" {
+  name = "${var.env}-eks-cluster-autoscaler-pod"
+
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": [
+            "pods.eks.amazonaws.com"
+          ]
+        },
+        "Action": [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
+      }
+    ]
+  })
+
+  inline_policy {
+    name = "cluster-autoscaler-policy"
+
+    policy = jsonencode({
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "autoscaling:DescribeAutoScalingGroups",
+            "autoscaling:DescribeAutoScalingInstances",
+            "autoscaling:DescribeLaunchConfigurations",
+            "autoscaling:DescribeScalingActivities",
+            "ec2:DescribeImages",
+            "ec2:DescribeInstanceTypes",
+            "ec2:DescribeLaunchTemplateVersions",
+            "ec2:GetInstanceTypesFromInstanceRequirements",
+            "eks:DescribeNodegroup"
+          ],
+          "Resource": ["*"]
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "autoscaling:SetDesiredCapacity",
+            "autoscaling:TerminateInstanceInAutoScalingGroup"
+          ],
+          "Resource": ["*"]
+        }
+      ]
+    })
+  }
+}
+
+resource "aws_eks_pod_identity_association" "cluster-autoscaler-dns" {
+  cluster_name    = aws_eks_cluster.main.name
+  namespace       = "devops"
+  service_account = "cluster-autoscaler-aws-cluster-autoscaler"
+  role_arn        = aws_iam_role.cluster-autoscaler.arn
+}

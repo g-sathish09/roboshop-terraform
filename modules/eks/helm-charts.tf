@@ -4,6 +4,7 @@ resource "null_resource" "kube-bootstrap" {
     command =<<EOF
 aws eks update-kubeconfig  --name ${var.env}-eks
 kubectl create ns devops
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 EOF
   }
 }
@@ -130,4 +131,22 @@ resource "helm_release" "filebeat" {
   values = [
     file("${path.module}/helm-config/filebeat.yaml")
   ]
+}
+
+## Cluster Autoscaler
+resource "helm_release" "cluster-autoscaler" {
+  depends_on = [null_resource.kube-bootstrap, helm_release.nginx-ingress]
+
+  name             = "cluster-autoscaler"
+  repository       = "https://kubernetes.github.io/autoscaler"
+  chart            = "cluster-autoscaler"
+  namespace        = "devops"
+  create_namespace = true
+  wait             = false
+
+  set {
+    name  = "autoDiscovery.clusterName"
+    value = aws_eks_cluster.main.name
+  }
+
 }
