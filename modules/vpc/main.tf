@@ -59,7 +59,7 @@ resource "aws_security_group" "test" {
 
 
 resource "aws_instance" "test" {
-  ami           = "ami-0fe5f70ea69ebc416"
+  ami           = "ami-09c813fb71547fc4f"
   instance_type = "t3.small"
   vpc_security_group_ids = [aws_security_group.test.id]
   subnet_id = aws_subnet.subnet["two"].id
