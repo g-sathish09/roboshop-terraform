@@ -125,7 +125,7 @@ vpc = {
 }
 
 default_vpc = {
-  id          = "vpc-0bba12d83ca561ddc"
+  id          = "vpc-05b09be73f5c07d64"
   cidr        = "172.31.0.0/16"
-  route_table = "rtb-0dff91f6add78f197"
+  route_table = "rtb-01ab7225851bf4a02"
 }
