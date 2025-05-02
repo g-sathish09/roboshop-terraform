@@ -7,7 +7,6 @@ module "vpc" {
   default_vpc = var.default_vpc
 }
 
-
 module "db_instances" {
   for_each       = var.db_instances
   source         = "./modules/ec2"
@@ -54,6 +53,7 @@ module "db_instances" {
 #   vault_token    = var.vault_token
 #   volume_size    = each.value["volume_size"]
 # }
+#
 
 module "eks" {
   source = "./modules/eks"
@@ -66,7 +66,11 @@ module "eks" {
   subnet_ids     = lookup(lookup(module.vpc, "main", null), "app_subnets", null)
 }
 
+
+# output "vpc" {
+#   value = module.vpc
+# }
+
 output "vpc_id" {
   value = lookup(module.vpc, "main", null)
 }
-
