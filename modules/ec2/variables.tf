@@ -6,3 +6,5 @@ variable "zone_id" {}
 variable "domain_name" {}
 variable "vault_token" {}
 variable "volume_size" {}
+variable "subnet_id" {}
+variable "bastion_nodes" {}

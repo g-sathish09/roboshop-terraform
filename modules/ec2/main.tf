@@ -1,12 +1,13 @@
 resource "aws_security_group" "sg" {
   name        = "${var.component_name}-${var.env}-sg"
   description = "Inbound allow for ${var.component_name}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.bastion_nodes
   }
 
   ingress {
@@ -29,6 +30,7 @@ resource "aws_instance" "instance" {
   ami                    = data.aws_ami.ami.id
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.sg.id]
+  subnet_id              = var.subnet_id
   tags = {
     Name = "${var.component_name}-${var.env}"
   }

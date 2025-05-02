@@ -12,6 +12,7 @@ resource "aws_subnet" "main" {
   availability_zone = each.value["az"]
   tags = {
     Name = "${var.env}-${each.key}"
+    subnet_group = each.value["subnet_group"]
   }
 }
 
@@ -91,42 +92,35 @@ resource "aws_route" "default-vpc-route-table" {
 
 
 
-# resource "aws_security_group" "test" {
-#   name = "test"
-#   vpc_id = aws_vpc.main.id
-#
-#   ingress {
-#     from_port        = 0
-#     to_port          = 0
-#     protocol         = "-1"
-#     cidr_blocks      = ["0.0.0.0/0"]
-#     ipv6_cidr_blocks = ["::/0"]
-#   }
-#
-#   egress {
-#     from_port        = 0
-#     to_port          = 0
-#     protocol         = "-1"
-#     cidr_blocks      = ["0.0.0.0/0"]
-#     ipv6_cidr_blocks = ["::/0"]
-#   }
-#
-# }
-#
-# resource "aws_instance" "test" {
-#   ami           = "ami-0fe5f70ea69ebc416"
-#   instance_type = "t3.small"
-#   vpc_security_group_ids = [aws_security_group.test.id]
-#   subnet_id = aws_subnet.main["private"].id
-# }
-#
+resource "aws_security_group" "test" {
+  name = "test"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+}
 
 
 
-# resource "aws_instance" "test" {
-#   ami           = "ami-09c813fb71547fc4f"
-#   instance_type = "t3.small"
-#   vpc_security_group_ids = [aws_security_group.test.id]
-#   subnet_id = aws_subnet.subnet["two"].id
-# }
+
+resource "aws_instance" "test" {
+  ami           = "ami-09c813fb71547fc4f"
+  instance_type = "t3.small"
+  vpc_security_group_ids = [aws_security_group.test.id]
+  subnet_id = aws_subnet.subnet["two"].id
+}
 
