@@ -66,3 +66,7 @@ module "eks" {
   subnet_ids     = lookup(lookup(module.vpc, "main", null), "app_subnets", null)
 }
 
+output "vpc_id" {
+  value = lookup(module.vpc, "main", null)
+}
+
