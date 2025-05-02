@@ -8,3 +8,4 @@ variable "vault_token" {}
 variable "volume_size" {}
 variable "subnet_id" {}
 variable "bastion_nodes" {}
+variable "allow_cidr" {}
