@@ -14,7 +14,7 @@ resource "aws_security_group" "sg" {
     from_port   = var.app_port
     to_port     = var.app_port
     protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allow_cidr
   }
 
   egress {

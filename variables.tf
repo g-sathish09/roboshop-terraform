@@ -9,3 +9,4 @@ variable "eks" {}
 variable "vpc" {}
 variable "default_vpc" {}
 variable "bastion_nodes" {}
+variable "allow_cidr" {}

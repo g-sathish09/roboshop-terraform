@@ -8,24 +8,28 @@ db_instances = {
     app_port      = 27017
     instance_type = "t3.small"
     volume_size   = 20
+    allow_cidr    = ["10.0.0.128/26", "10.0.0.192/26"]
   }
 
   redis = {
     app_port      = 6379
     instance_type = "t3.small"
     volume_size   = 20
+    allow_cidr    = ["10.0.0.128/26", "10.0.0.192/26"]
   }
 
   rabbitmq = {
     app_port      = 5672
     instance_type = "t3.small"
     volume_size   = 20
+    allow_cidr    = ["10.0.0.128/26", "10.0.0.192/26"]
   }
 
   mysql = {
     app_port      = 3306
     instance_type = "t3.small"
     volume_size   = 20
+    allow_cidr    = ["10.0.0.128/26", "10.0.0.192/26"]
   }
  }
 
