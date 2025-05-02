@@ -123,10 +123,10 @@ resource "aws_route" "default-vpc-route-table" {
 
 
 
-resource "aws_instance" "test" {
-  ami           = "ami-09c813fb71547fc4f"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [aws_security_group.test.id]
-  subnet_id = aws_subnet.subnet["two"].id
-}
+# resource "aws_instance" "test" {
+#   ami           = "ami-09c813fb71547fc4f"
+#   instance_type = "t3.small"
+#   vpc_security_group_ids = [aws_security_group.test.id]
+#   subnet_id = aws_subnet.subnet["two"].id
+# }
 
