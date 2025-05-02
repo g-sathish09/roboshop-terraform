@@ -9,6 +9,7 @@ locals {
     if subnet_value.igw == false
   ]
 
-  az = distinct([ for k,v in var.subnets: v.az ])
+  az = distinct([for k, v in var.subnets : v.az])
 
 }
+
