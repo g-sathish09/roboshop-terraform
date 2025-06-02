@@ -10,7 +10,7 @@ EOF
 }
 
 resource "helm_release" "nginx-ingress" {
-  depends_on = [null_resource.kube-bootstrap]
+  depends_on = [null_resource.kube-bootstrap,aws_eks_cluster.main, aws_eks_node_group.main]
   chart = "oci://ghcr.io/nginxinc/charts/nginx-ingress"
   name  = "nginx-ingress"
   namespace = "devops"
