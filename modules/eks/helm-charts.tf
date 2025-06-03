@@ -25,16 +25,16 @@ EOF
 
 
 
-resource "null_resource" "kube-bootstrap" {
-  depends_on = [aws_eks_cluster.main, aws_eks_node_group.main]
-  provisioner "local-exec" {
-    command =<<EOF
-aws eks update-kubeconfig  --name ${var.env}-eks
-kubectl create ns devops
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-EOF
-  }
-}
+# resource "null_resource" "kube-bootstrap" {
+#   depends_on = [aws_eks_cluster.main, aws_eks_node_group.main]
+#   provisioner "local-exec" {
+#     command =<<EOF
+# aws eks update-kubeconfig  --name ${var.env}-eks
+# kubectl create ns devops
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+# EOF
+#   }
+# }
 
 resource "helm_release" "nginx-ingress" {
   depends_on = [null_resource.kube-bootstrap,aws_eks_cluster.main, aws_eks_node_group.main]
