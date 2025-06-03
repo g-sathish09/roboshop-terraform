@@ -1,4 +1,5 @@
 # Add this to ensure kubeconfig is properly updated
+# Add this to ensure kubeconfig is properly updated
 resource "null_resource" "update_kubeconfig" {
   depends_on = [aws_eks_cluster.main, aws_eks_node_group.main]
   
@@ -18,6 +19,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 EOF
   }
 }
+
 
 
 
