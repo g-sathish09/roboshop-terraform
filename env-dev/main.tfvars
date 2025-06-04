@@ -1,7 +1,7 @@
 env         = "dev"
 domain_name = "harsharoboticshop.online"
 zone_id     = "Z05536047CUMASJ01KSK"
-bastion_nodes = ["172.31.91.184/32", "172.31.93.173/32"]
+bastion_nodes = ["172.31.91.184/32", "172.31.83.166/32"]
 
 db_instances = {
   mongodb = {
