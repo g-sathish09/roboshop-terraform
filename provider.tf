@@ -4,7 +4,9 @@ provider "vault" {
   skip_tls_verify = true
 }
 
-provider "kubernetes" {
-  config_path = "~/.kube/config"
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
 }
 
