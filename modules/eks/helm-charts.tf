@@ -1,34 +1,7 @@
-# Add this to ensure kubeconfig is properly updated
-# Add this to ensure kubeconfig is properly updated
-resource "null_resource" "update_kubeconfig" {
-  depends_on = [aws_eks_cluster.main, aws_eks_node_group.main]
-  
-  provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --name ${var.env}-eks --region $(aws configure get region)"
-  }
-}
-
-# Update the kube-bootstrap resource to depend on the kubeconfig update
-# resource "null_resource" "kube-bootstrap" {
-#   depends_on = [null_resource.update_kubeconfig]
-  
-#   provisioner "local-exec" {
-#     command = <<EOF
-# kubectl create namespace devops --dry-run=client -o yaml | kubectl apply -f -
-# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-# EOF
-#   }
-# }
-
-
-
-
-
-
 resource "null_resource" "kube-bootstrap" {
   depends_on = [aws_eks_cluster.main, aws_eks_node_group.main]
   provisioner "local-exec" {
-    command =<<EOF
+    command = <<EOF
 aws eks update-kubeconfig  --name ${var.env}-eks
 kubectl create ns devops
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
@@ -37,10 +10,10 @@ EOF
 }
 
 resource "helm_release" "nginx-ingress" {
-  depends_on = [null_resource.kube-bootstrap,aws_eks_cluster.main, aws_eks_node_group.main]
-  chart = "oci://ghcr.io/nginxinc/charts/nginx-ingress"
-  name  = "nginx-ingress"
-  namespace = "devops"
+  depends_on = [null_resource.kube-bootstrap]
+  chart      = "oci://ghcr.io/nginxinc/charts/nginx-ingress"
+  name       = "nginx-ingress"
+  namespace  = "devops"
   wait       = true
 
   values = [
@@ -62,7 +35,7 @@ resource "helm_release" "external-dns" {
 
 ## ArgoCD Setup
 resource "helm_release" "argocd" {
-  depends_on = [null_resource.kube-bootstrap]
+  depends_on = [null_resource.kube-bootstrap, helm_release.external-dns]
 
   name             = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
@@ -99,7 +72,6 @@ resource "helm_release" "prom-stack" {
 
 }
 
-
 ## External Secrets
 resource "helm_release" "external-secrets" {
   depends_on = [null_resource.kube-bootstrap]
@@ -123,7 +95,7 @@ kind: Secret
 metadata:
   name: vault-token
 data:
-  token: aHZzLnFjMlY5NElNQ2hPQ2RvSkxvM3FlckRReQ==
+  token: aHZzLm85R1NRbnpXNFNMTmhZSWE4aVllWlNuVQ==
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
@@ -144,6 +116,7 @@ EOF
   }
 }
 
+
 ## Filebeat Helm Chart
 resource "helm_release" "filebeat" {
 
@@ -158,6 +131,7 @@ resource "helm_release" "filebeat" {
   values = [
     file("${path.module}/helm-config/filebeat.yaml")
   ]
+
 }
 
 ## Cluster Autoscaler
@@ -176,4 +150,33 @@ resource "helm_release" "cluster-autoscaler" {
     value = aws_eks_cluster.main.name
   }
 
+}
+
+# Istio Base
+resource "helm_release" "istio-base" {
+  depends_on = [
+    null_resource.kube-bootstrap
+  ]
+
+  name             = "istio-base"
+  repository       = "https://istio-release.storage.googleapis.com/charts"
+  chart            = "base"
+  namespace        = "istio-system"
+  create_namespace = true
+  wait             = true
+}
+
+# IstioD
+resource "helm_release" "istiod" {
+  depends_on = [
+    null_resource.kube-bootstrap,
+    helm_release.istio-base
+  ]
+
+  name             = "istiod"
+  repository       = "https://istio-release.storage.googleapis.com/charts"
+  chart            = "istiod"
+  namespace        = "istio-system"
+  create_namespace = true
+  wait             = true
 }
