@@ -9,17 +9,17 @@ EOF
   }
 }
 
-# resource "helm_release" "nginx-ingress" {
-#   depends_on = [null_resource.kube-bootstrap]
-#   chart      = "oci://ghcr.io/nginxinc/charts/nginx-ingress"
-#   name       = "nginx-ingress"
-#   namespace  = "devops"
-#   wait       = true
-#
-#   values = [
-#     file("${path.module}/helm-config/nginx-ingress.yml")
-#   ]
-# }
+resource "helm_release" "nginx-ingress" {
+  depends_on = [null_resource.kube-bootstrap]
+  chart      = "oci://ghcr.io/nginxinc/charts/nginx-ingress"
+  name       = "nginx-ingress"
+  namespace  = "devops"
+  wait       = true
+
+  values = [
+    file("${path.module}/helm-config/nginx-ingress.yml")
+  ]
+}
 
 ## External DNS
 resource "helm_release" "external-dns" {
@@ -46,7 +46,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "global.domain"
-    value = "argocd-${var.env}.harsharoboticshop.online"
+    value = "argocd-${var.env}.rdevopsb81.online"
   }
 
   values = [
@@ -72,21 +72,21 @@ resource "helm_release" "prom-stack" {
 
 }
 
-# ## External Secrets
-# resource "helm_release" "external-secrets" {
-#   depends_on = [null_resource.kube-bootstrap]
-#
-#   name             = "external-secrets"
-#   repository       = "https://charts.external-secrets.io"
-#   chart            = "external-secrets"
-#   namespace        = "devops"
-#   create_namespace = true
-#   wait             = true
-# }
+## External Secrets
+resource "helm_release" "external-secrets" {
+  depends_on = [null_resource.kube-bootstrap]
+
+  name             = "external-secrets"
+  repository       = "https://charts.external-secrets.io"
+  chart            = "external-secrets"
+  namespace        = "devops"
+  create_namespace = true
+  wait             = true
+}
 
 # resource "null_resource" "external-secret" {
 #   depends_on = [helm_release.external-secrets]
-
+#
 #   provisioner "local-exec" {
 #     command = <<EOF
 # kubectl apply -f - <<EOK
@@ -104,7 +104,7 @@ resource "helm_release" "prom-stack" {
 # spec:
 #   provider:
 #     vault:
-#       server: "http://vault-internal.harsharoboticshop.online:8200"
+#       server: "http://vault-internal.rdevopsb81.online:8200"
 #       path: "roboshop-${var.env}"
 #       version: "v2"
 #       auth:
@@ -166,17 +166,17 @@ resource "helm_release" "istio-base" {
   wait             = true
 }
 
-# # IstioD
-# resource "helm_release" "istiod" {
-#   depends_on = [
-#     null_resource.kube-bootstrap,
-#     helm_release.istio-base
-#   ]
-#
-#   name             = "istiod"
-#   repository       = "https://istio-release.storage.googleapis.com/charts"
-#   chart            = "istiod"
-#   namespace        = "istio-system"
-#   create_namespace = true
-#   wait             = true
-# }
+# IstioD
+resource "helm_release" "istiod" {
+  depends_on = [
+    null_resource.kube-bootstrap,
+    helm_release.istio-base
+  ]
+
+  name             = "istiod"
+  repository       = "https://istio-release.storage.googleapis.com/charts"
+  chart            = "istiod"
+  namespace        = "istio-system"
+  create_namespace = true
+  wait             = true
+}
