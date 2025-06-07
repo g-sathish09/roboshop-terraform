@@ -46,7 +46,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "global.domain"
-    value = "argocd-${var.env}.rdevopsb81.online"
+    value = "argocd-${var.env}.harsharoboticshop.online"
   }
 
   values = [
@@ -104,7 +104,7 @@ resource "helm_release" "external-secrets" {
 # spec:
 #   provider:
 #     vault:
-#       server: "http://vault-internal.rdevopsb81.online:8200"
+#       server: "http://vault-internal.harsharoboticshop.online:8200"
 #       path: "roboshop-${var.env}"
 #       version: "v2"
 #       auth:
